@@ -17,7 +17,7 @@ cache:
     - node_modules
 
 before_script:
-  - meteor npm install
+  - (cd $TRAVIS_BUILD_DIR/src/ && meteor npm install)
 
 script:
-  - meteor test --once --driver-package meteortesting:mocha
+  - (cd $TRAVIS_BUILD_DIR/src/ && meteor test --once --driver-package meteortesting:mocha)

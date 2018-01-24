@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  test:
     docker:
       # specify the version you desire here
       - image: circleci/node:4.8.4-browsers
@@ -42,3 +42,53 @@ jobs:
           command: MONGO_URL=mongodb://localhost:27017/runner meteor npm run testci
           name: test
           working_directory: src
+  build:
+    docker:
+      - image: circleci/node:4.8.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: curl https://install.meteor.com | /bin/sh
+      - run: echo 'export PATH=$HOME/.meteor:$PATH' >> $BASH_ENV
+      - run:
+          command: meteor build --directory ../dist --architecture=os.linux.x86_64 --server-only
+          name: build
+          working_directory: src
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory
+          root: dist
+          # Must be relative path from root
+          paths:
+            - ./*
+
+  deploy:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: dist
+
+      - run:  apk --no-cache add jq
+      - run: |
+          docker build -t poder/quienesquienwiki:$CIRCLE_BRANCH .
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker push poder/quienesquienwiki:$CIRCLE_BRANCH
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - build

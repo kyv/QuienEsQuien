@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:4.8.4
+      - image: circleci/node:4.8.4-browsers
       - image: circleci/mongo:3.4.4
         command: [mongod, --smallfiles]
 
@@ -25,6 +25,7 @@ jobs:
 
       - run: curl https://install.meteor.com | /bin/sh
       - run: echo 'export PATH=$HOME/.meteor:$PATH' >> $BASH_ENV
+      - run: echo 'export TEST_BROWSER_DRIVER=nightmare' >> $BASH_ENV
 
       - run:
           command: meteor npm install
@@ -38,6 +39,6 @@ jobs:
 
       # run tests!
       - run:
-          command: MONGO_URL=mongodb://localhost:27017/runner meteor test --once --driver-package meteortesting:mocha
+          command: MONGO_URL=mongodb://localhost:27017/runner meteor npm run testci
           name: test
           working_directory: src

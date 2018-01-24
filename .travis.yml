@@ -11,6 +11,7 @@ services:
 before_install:
   - curl https://install.meteor.com | /bin/sh
   - export PATH="$HOME/.meteor:$PATH"
+  - export TEST_BROWSER_DRIVER=nightmare
 
 cache:
   directories:
@@ -20,4 +21,4 @@ before_script:
   - (cd $TRAVIS_BUILD_DIR/src/ && meteor npm install)
 
 script:
-  - (cd $TRAVIS_BUILD_DIR/src/ && meteor test --once --driver-package meteortesting:mocha)
+  - (cd $TRAVIS_BUILD_DIR/src/ && meteor npm run testci)

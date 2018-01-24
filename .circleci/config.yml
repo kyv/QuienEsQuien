@@ -26,7 +26,7 @@ jobs:
           - v1-dependencies-
 
       - run:
-          comand: meteor npm install
+          command: meteor npm install
           name: install
           working_directory: src
 

@@ -38,6 +38,6 @@ jobs:
 
       # run tests!
       - run:
-          command: MONGO_URL=mongodb://localhost:27017/runner meteor test --allow-superuser --once --driver-package meteortesting:mocha
+          command: MONGO_URL=mongodb://localhost:27017/runner meteor test --once --driver-package meteortesting:mocha
           name: test
           working_directory: src

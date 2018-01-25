@@ -37,30 +37,16 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "src/package.json" }}
 
-      # run tests!
       - run:
           command: MONGO_URL=mongodb://localhost:27017/runner meteor npm run testci
           name: test
           working_directory: src
-  build:
-    docker:
-      - image: circleci/node:4.8.4
 
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      - run: curl https://install.meteor.com | /bin/sh
-      - run: echo 'export PATH=$HOME/.meteor:$PATH' >> $BASH_ENV
-      - run:
-          command: meteor npm install
-          name: install
-          working_directory: src
       - run:
           command: meteor build --directory ../dist --architecture=os.linux.x86_64 --server-only
           name: build
           working_directory: src
+
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: dist
@@ -68,7 +54,7 @@ jobs:
           paths:
             - ./*
 
-  deploy:
+  build:
     docker:
       - image: docker:stable-git
     steps:
@@ -93,6 +79,3 @@ workflows:
       - build:
           requires:
             - test
-      - deploy:
-          requires:
-            - build

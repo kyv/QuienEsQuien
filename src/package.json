@@ -1,6 +1,6 @@
 {
   "name": "quienesquien.wiki",
-  "version": "0.6.8",
+  "version": "0.6.8t",
   "private": true,
   "scripts": {
     "start": "MONGO_URL=mongodb://localhost:27017/meteor meteor run",
@@ -11,8 +11,8 @@
   },
   "license": "GPL-3.0",
   "author": {
-    "name": "Kevin Brown",
-    "email": "kevin@rindecuentas.org"
+    "name": "projectPODER",
+    "email": ""
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"
